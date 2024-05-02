@@ -24,10 +24,14 @@ public class RestApiController{
     @Autowired
     ActionService actionService;
 
-    @GetMapping(path = "/hello", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getHello()
     {
-        return new ResponseEntity<>("Hello world!", HttpStatus.OK);
+        String response = "Hello world!";
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .contentLength(response.length())
+            .body(response);
     }
 
     @PutMapping(path="/event", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
