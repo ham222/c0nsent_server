@@ -18,6 +18,7 @@ target/
 *.iws
 *.iml
 *.ipr
+postgres.properties
 
 ### NetBeans ###
 /nbproject/private/

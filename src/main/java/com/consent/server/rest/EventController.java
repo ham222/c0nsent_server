@@ -1,7 +1,7 @@
 package com.consent.server.rest;
 
 import com.consent.server.model.Action;
-import com.consent.server.services.interfaces.ActionService;
+import com.consent.server.services.interfaces.EventService;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RestController
-@RequestMapping("/api")
-public class RestApiController{
+@RequestMapping("/api/events")
+public class EventController{
 
     @Autowired
-    ActionService actionService;
+    EventService eventService;
 
     @GetMapping(path = "/hello", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> getHello()
@@ -34,7 +34,7 @@ public class RestApiController{
             .body(response);
     }
 
-    @PutMapping(path="/event", produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> createEvent(
             @RequestPart(value = "jsonData") String json,
             @RequestPart(value = "image")MultipartFile image
@@ -52,7 +52,7 @@ public class RestApiController{
 
         try {
             action.setPhoto(image.getBytes());
-            actionService.processAction(action);
+            eventService.processAction(action);
         }catch (IOException e){
             return new ResponseEntity<>(HttpStatus.PAYLOAD_TOO_LARGE);
         }
@@ -60,7 +60,7 @@ public class RestApiController{
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value= "/event", produces = MediaType.IMAGE_JPEG_VALUE)
+    @GetMapping(produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<Resource> getEvent(){
         final ByteArrayResource inputStream;
         try {
